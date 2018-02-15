@@ -1,17 +1,14 @@
 package net.lrsoft.foxbladeex;
 
-
-import mods.flammpfeil.slashblade.EntityDirectAttackDummy;
-import mods.flammpfeil.slashblade.ItemSlashBlade;
-import mods.flammpfeil.slashblade.entity.EntitySakuraEndManager;
-import mods.flammpfeil.slashblade.specialattack.SpecialAttackBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-
+import mods.flammpfeil.slashblade.entity.EntitySakuraEndManager;
+import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import mods.flammpfeil.slashblade.specialattack.SpecialAttackBase;
 
 public class SAsakuraend_ex extends SpecialAttackBase {
     @Override
@@ -21,7 +18,7 @@ public class SAsakuraend_ex extends SpecialAttackBase {
 
     @Override
     public void doSpacialAttack(ItemStack stack, EntityPlayer player) {
-        World world = player.worldObj;
+        World world = player.world;
 
         NBTTagCompound tag = ItemSlashBlade.getItemTagCompound(stack);
 
@@ -29,21 +26,18 @@ public class SAsakuraend_ex extends SpecialAttackBase {
 
             final int cost = -15;
             if(!ItemSlashBlade.ProudSoul.tryAdd(tag,cost,false)){
-                ItemSlashBlade.damageItem(stack, 10, player);
+                ItemSlashBlade.damageItem(stack, 8, player);
             }
-            player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),80,2,true));
-            player.addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(),200,2,true));
+            player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,80,2,true,false));
+            player.addPotionEffect(new PotionEffect(MobEffects.SPEED,200,2,true,false));
             ItemSlashBlade blade = (ItemSlashBlade)stack.getItem();
 
             EntitySakuraEndManager entityDA = new EntitySakuraEndManager(world, player);
             if (entityDA != null) {
-                world.spawnEntityInWorld(entityDA);
+                world.spawnEntity(entityDA);
             }
         }
-    
 
         ItemSlashBlade.setComboSequence(tag, ItemSlashBlade.ComboSequence.SlashEdge);
-
     }
-
 }
