@@ -37,17 +37,24 @@ import mods.flammpfeil.slashblade.util.SlashBladeHooks;
 	               World world = player.worldObj;
 	               NBTTagCompound tag = ItemSlashBlade.getItemTagCompound(event.blade);
 	               if(!useBlade(ItemSlashBlade.getComboSequence(tag))) return;
-	                
-	          if(player.experienceLevel>=40){
-	        	    player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),50,2));
-	        	    player.addPotionEffect(new PotionEffect(Potion.heal.getId(),50,2));
-	        	    player.addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(),50,2));
-	            }else{
-	            	player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),25,1));
-	            }
+	               switch (SpecialEffects.isEffective(player,event.blade,this)){
+	                   case None:
+	                	   player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),25,1));
+	                       return;
+	                   case NonEffective:
+	                       if(player.getRNG().nextInt(4) != 0){
+	                           player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),100,2));
+	                           player.addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(),100,2));
+	                       	return;
+	                       }
+	                       break;
+	                   case Effective:
+	   	        	    player.addPotionEffect(new PotionEffect(Potion.damageBoost.getId(),50,2));
+		        	    player.addPotionEffect(new PotionEffect(Potion.heal.getId(),50,2));
+		        	    player.addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(),50,2));
+	               }
 
 	    }
-
 	    @Override
 	    public void register() {
 	        SlashBladeHooks.EventBus.register(this);
@@ -62,8 +69,5 @@ import mods.flammpfeil.slashblade.util.SlashBladeHooks;
 	    public String getEffectKey() {
 	        return EffectKey;
 	    }
-	    
-
 	}
-
 
